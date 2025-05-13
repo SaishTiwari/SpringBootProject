@@ -2,28 +2,26 @@ package com.myfirstproject.productlist.controller;
 
 import com.myfirstproject.productlist.dto.CategoryDTO;
 import com.myfirstproject.productlist.service.CategoryService;
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(name = "/api/categories")
-@AllArgsConstructor
+@RequestMapping("/api/categories")
 public class CategoryController {
+
     private final CategoryService categoryService;
 
-
-
-    //getAllCategories
-    //createCategories
-
-    @PostMapping
-    public CategoryDTO createProduct (@RequestBody CategoryDTO categoryDTO){
-        return categoryService.createCategory(categoryDTO);
-
+    // Constructor injection
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
-    //getCategoriesByID
 
+    // POST /api/categories
+    @PostMapping
+    public ResponseEntity<CategoryDTO> createCategory (@RequestBody CategoryDTO categoryDTO) {
+        return new ResponseEntity<> (categoryService.createCategory(categoryDTO), HttpStatus.CREATED);
+    }
+
+    // TODO: Add getAllCategories and getCategoryById
 }
