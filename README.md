@@ -2,7 +2,6 @@ A basic Spring Boot project with all essential backend features pre-configured f
 
 📦 Getting Started
 	1.	Clone the repository
-git clone https://github.com/your-username/your-repo.git
 	2.	Import into your IDE
 	3.	Configure DB in application.properties (or use H2 for quick testing)
 	4.	Run the application
