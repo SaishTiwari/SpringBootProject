@@ -45,18 +45,24 @@ public class ProductService {
 
     }
 
+    //Get Product By ID
     public ProductDTO getProductByID(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("No such id found"));
         return ProductMapper.toProductDTO(product);
     }
 
+    //Delete Product
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 
+    //Get All Product
     public List<ProductDTO> getAllProducts() {
         return productRepository.findAll().stream().map(ProductMapper::toProductDTO).toList();
     }
+
+
+    //Update Product
 
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("No such product found"));
