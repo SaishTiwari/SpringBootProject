@@ -31,8 +31,17 @@ public class CategoryController {
     public List<CategoryDTO> getAllCategory (){
         return categoryService.getAllCategory();
     }
-    
+
+    @GetMapping("/{id}")
+    public CategoryDTO getCategoryByID(@PathVariable long id){
+        return categoryService.getCategoryByID(id);
+
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCategory(@PathVariable long id){
+        categoryService.deleteCategory(id);
+    }
 
 
-    // TODO: Add getAllCategories and getCategoryById
 }

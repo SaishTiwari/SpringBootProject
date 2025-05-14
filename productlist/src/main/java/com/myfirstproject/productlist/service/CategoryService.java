@@ -31,4 +31,13 @@ public class CategoryService {
                 .map(CategoryMapper::toCategoryDTO).toList();
     }
 
+    public CategoryDTO getCategoryByID(Long id){
+        Category category = categoryRepository.findById(id).orElseThrow(()-> new RuntimeException("ID not found"));
+        return CategoryMapper.toCategoryDTO(category);
+    }
+
+    public void deleteCategory(Long id){
+        categoryRepository.deleteById(id);
+    }
+
 }
