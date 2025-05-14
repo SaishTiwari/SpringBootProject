@@ -7,6 +7,8 @@ import com.myfirstproject.productlist.repository.CategoryRepository;
 import com.myfirstproject.productlist.entity.Category;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryService {
 
@@ -22,4 +24,11 @@ public class CategoryService {
         Category savedCategory = categoryRepository.save(category);
         return CategoryMapper.toCategoryDTO(savedCategory);
     }
+
+    public List<CategoryDTO> getAllCategory() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(CategoryMapper::toCategoryDTO).toList();
+    }
+
 }

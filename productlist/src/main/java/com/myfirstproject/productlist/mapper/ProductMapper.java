@@ -9,13 +9,16 @@ public class ProductMapper {
     // Entity to DTO
 
     public static ProductDTO toProductDTO(Product product){
-        return new ProductDTO(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getCategory().getId()
-        );
+
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(product.getId());
+        productDTO.setName(product.getName());
+        productDTO.setDescription(product.getDescription());
+        productDTO.setPrice(product.getPrice());
+        productDTO.setCategoryID(product.getCategory().getId());
+        return productDTO;
+
+
 
     }
 
