@@ -4,6 +4,7 @@ import com.myfirstproject.productlist.controller.ProductController;
 import com.myfirstproject.productlist.dto.ProductDTO;
 import com.myfirstproject.productlist.entity.Category;
 import com.myfirstproject.productlist.entity.Product;
+import com.myfirstproject.productlist.exception.ProductPriceExceptionHandler;
 import com.myfirstproject.productlist.mapper.CategoryMapper;
 import com.myfirstproject.productlist.mapper.ProductMapper;
 import com.myfirstproject.productlist.repository.CategoryRepository;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -33,6 +35,7 @@ public class ProductService {
         Category category = categoryRepository.findById(productDTO.getCategoryID())
                 .orElseThrow(() -> new RuntimeException("Category Not found"));
 
+
         //DTO -> Entity
         Product product = ProductMapper.toProductEntity(productDTO, category);
 
@@ -49,6 +52,16 @@ public class ProductService {
     public ProductDTO getProductByID(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("No such id found"));
         return ProductMapper.toProductDTO(product);
+    }
+
+    public List<ProductDTO> getProductByPrice(double price) {
+        List<Product> products = productRepository.findByPriceLessThan(price);
+        if(products.isEmpty()){
+            throw new ProductPriceExceptionHandler("No products available");
+        }
+        return products.stream()
+                .map(ProductMapper::toProductDTO)  // method reference to convert each Product
+                .toList();                        // collect as List<ProductDTO>
     }
 
     //Delete Product

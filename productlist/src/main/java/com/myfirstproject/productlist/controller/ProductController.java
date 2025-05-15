@@ -1,6 +1,7 @@
 package com.myfirstproject.productlist.controller;
 
 import com.myfirstproject.productlist.dto.ProductDTO;
+import com.myfirstproject.productlist.entity.Product;
 import com.myfirstproject.productlist.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,12 @@ public class ProductController {
     @GetMapping("/{id}")
     public ProductDTO getProductByID (@PathVariable Long id ){
         return productService.getProductByID(id);
+    }
+
+    @GetMapping("cheaper-than/{price}")
+    public List<ProductDTO> getProductByPrice(@PathVariable double price){
+       return productService.getProductByPrice(price);
+
     }
 
 
