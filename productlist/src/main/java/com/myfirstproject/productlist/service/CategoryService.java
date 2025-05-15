@@ -3,6 +3,7 @@ package com.myfirstproject.productlist.service;
 
 import com.myfirstproject.productlist.dto.CategoryDTO;
 import com.myfirstproject.productlist.exception.CategoryAlreadyExistException;
+import com.myfirstproject.productlist.exception.CategoryNotFoundException;
 import com.myfirstproject.productlist.mapper.CategoryMapper;
 import com.myfirstproject.productlist.repository.CategoryRepository;
 import com.myfirstproject.productlist.entity.Category;
@@ -36,13 +37,17 @@ public class CategoryService {
     }
 
     public List<CategoryDTO> getAllCategory() {
+       if (categoryRepository.findAll().isEmpty()){
+            throw new CategoryNotFoundException("No category found");
+        }
         return categoryRepository.findAll()
                 .stream()
                 .map(CategoryMapper::toCategoryDTO).toList();
     }
 
     public CategoryDTO getCategoryByID(Long id){
-        Category category = categoryRepository.findById(id).orElseThrow(()-> new RuntimeException("ID not found"));
+
+        Category category = categoryRepository.findById(id).orElseThrow(()-> new CategoryNotFoundException("Category of ths ID not found"));
         return CategoryMapper.toCategoryDTO(category);
     }
 
