@@ -5,6 +5,7 @@ import com.myfirstproject.productlist.service.CategoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class CategoryController {
     }
 
     // POST /api/categories
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<CategoryDTO> createCategory (@RequestBody CategoryDTO categoryDTO) {
         return new ResponseEntity<> (categoryService.createCategory(categoryDTO), HttpStatus.CREATED);
@@ -44,6 +46,7 @@ public class CategoryController {
 
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteCategory(@PathVariable long id){
         categoryService.deleteCategory(id);

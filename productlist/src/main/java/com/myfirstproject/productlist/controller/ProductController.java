@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class ProductController {
             summary = "RestAPI to fetch all product",
             description = "Fetch all products"
     )
-    
+
     //getAllProducts
     @GetMapping
     public List<ProductDTO> getAllProducts (){
@@ -40,6 +41,7 @@ public class ProductController {
     }
 
     //createProducts
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct (@RequestBody ProductDTO productDTO){
         return new ResponseEntity<> (productService.createProduct(productDTO), HttpStatus.CREATED);
@@ -47,6 +49,7 @@ public class ProductController {
 
 
     //updateProducts
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @PutMapping("/{id}")
     public ProductDTO updateProduct (@PathVariable Long id, @RequestBody ProductDTO productDTO){
 
@@ -55,6 +58,7 @@ public class ProductController {
 
 
     //deleteProducts
+    @PreAuthorize("hasAuthority('ROLE_SELLER')")
     @DeleteMapping("/{id}")
     public void deleteProduct (@PathVariable Long id){
         productService.deleteProduct(id);
@@ -68,6 +72,7 @@ public class ProductController {
         return productService.getProductByID(id);
     }
 
+    //filterByPriceCheaperthan
     @GetMapping("cheaper-than/{price}")
     public List<ProductDTO> getProductByPrice(@PathVariable double price){
        return productService.getProductByPrice(price);
