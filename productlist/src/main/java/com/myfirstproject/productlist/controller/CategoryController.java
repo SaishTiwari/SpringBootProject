@@ -2,11 +2,17 @@ package com.myfirstproject.productlist.controller;
 
 import com.myfirstproject.productlist.dto.CategoryDTO;
 import com.myfirstproject.productlist.service.CategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+@Tag(
+        name = "Category API",
+        description = "CRUD operation of category API"
+)
 
 @RestController
 @RequestMapping("/api/categories")

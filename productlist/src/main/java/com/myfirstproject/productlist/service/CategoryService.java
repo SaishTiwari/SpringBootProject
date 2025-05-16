@@ -28,7 +28,7 @@ public class CategoryService {
 
        //Exception Handling
        if(optionalCategory.isPresent()){
-           throw new CategoryAlreadyExistException("Category" + categoryDTO.getName() + "already exists.");
+           throw new CategoryAlreadyExistException("Category " + categoryDTO.getName() + " already exists.");
        }
 
         Category category = CategoryMapper.toCategoryEntity(categoryDTO);

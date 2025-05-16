@@ -3,11 +3,18 @@ package com.myfirstproject.productlist.controller;
 import com.myfirstproject.productlist.dto.ProductDTO;
 import com.myfirstproject.productlist.entity.Product;
 import com.myfirstproject.productlist.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+@Tag(
+        name = "Product API",
+        description = "CRUD operation on product API"
+)
 
 @RestController
 @RequestMapping("/api/products")
@@ -20,6 +27,11 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @Operation(
+            summary = "RestAPI to fetch all product",
+            description = "Fetch all products"
+    )
+    
     //getAllProducts
     @GetMapping
     public List<ProductDTO> getAllProducts (){

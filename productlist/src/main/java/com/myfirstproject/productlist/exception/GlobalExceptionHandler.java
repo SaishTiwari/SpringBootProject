@@ -1,16 +1,27 @@
 package com.myfirstproject.productlist.exception;
 
+import com.myfirstproject.productlist.dto.ExceptionResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+
+import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CategoryAlreadyExistException.class)
-    public ResponseEntity<String> handleCategoryAlreadyExistException (CategoryAlreadyExistException ex){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    public ResponseEntity<ExceptionResponseDTO> handleCategoryAlreadyExistException (CategoryAlreadyExistException ex, WebRequest webRequest){
+        ExceptionResponseDTO exceptionResponseDTO = new ExceptionResponseDTO(
+                webRequest.getDescription(false),
+                HttpStatus.CONFLICT,
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(exceptionResponseDTO);
     }
 
     @ExceptionHandler(ProductPriceExceptionHandler.class)
