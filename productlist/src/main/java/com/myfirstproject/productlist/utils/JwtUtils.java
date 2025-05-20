@@ -1,101 +1,42 @@
 package com.myfirstproject.productlist.utils;
 
-//import org.slf4j.Logger;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+    private static String secretKey;
 
-    @Value("${spring.app.jwtSecret}")
-    private String jwtSecret;
-
-    @Value("${spring.app.jwtExpiration}")
-    private int jwtExpirationMs;
-
-
-    public String getJwtFromHeader (HttpServletRequest request){
-        String bearerToken = request.getHeader("Authorization");
-        //print bearer token
-        logger.debug("Authorization Header: {}", bearerToken);
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")){
-            return bearerToken.substring(7);
-        }
-        return null;
+    // Constructor to generate a random Base64-encoded 256-bit secret key
+    public JwtUtils() {
+        SecureRandom random = new SecureRandom();
+        byte[] key = new byte[32]; // 256 bits
+        random.nextBytes(key);
+        secretKey = Base64.getEncoder().encodeToString(key);
     }
 
-
-
-
-    public String generateTokenFromUsername (UserDetails userDetails){
-        String username = userDetails.getUsername();
+    public String generateToken(String username, List<String> roles) {
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + jwtExpirationMs) )
-                .signWith(key())
+                .claim("roles", roles)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 2)) // 2 minutes
+                .signWith(getSignedKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-
-
-    private Key key(){
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+    private Key getSignedKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
-
-    public String getUserNameFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
-
-
-
-
-    public boolean validateJwtToken(String authToken) {
-        try {
-            System.out.println("Validate");
-
-            Jwts.parserBuilder()
-                    .setSigningKey(key())  // your secret key
-                    .build()
-                    .parseClaimsJws(authToken);  // this will throw an exception if token is invalid
-
-            return true;
-
-        } catch (MalformedJwtException e) {
-            logger.error("Invalid JWT token: {}", e.getMessage());
-        } catch (ExpiredJwtException e) {
-            logger.error("JWT token is expired: {}", e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            logger.error("JWT token is unsupported: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            logger.error("JWT claims string is empty: {}", e.getMessage());
-        }
-
-        return false;
-    }
-
-
-
 }
