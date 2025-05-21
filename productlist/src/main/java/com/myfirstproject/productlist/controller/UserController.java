@@ -53,7 +53,7 @@ public class UserController {
 
         UserDetails userDetails = userService.loadUserByUsername(userDTO.getUsername());
 
-        return jwtUtils.generateToken(userDetails.getUsername(), roles);
+        return jwtUtils.generateTokenFromUsername(userDetails);
     }
 }
 
